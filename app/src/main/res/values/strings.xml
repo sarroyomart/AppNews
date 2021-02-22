@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">AppNews</string>
+
+    <!--
+    LOGIN ACTIVITY
+    -->
+    <string name="login">LOGIN</string>
+
+    <!--
+    MAIN ACTIVITY
+    -->
+    <string name="user">NAME</string>
+
 </resources>
