@@ -4,6 +4,7 @@
     <!--
     LOGIN ACTIVITY
     -->
+    <string name="appnews">APPNEWS</string>
     <string name="login">LOGIN</string>
 
     <!--

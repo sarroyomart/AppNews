@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
         signin = findViewById<SignInButton>(R.id.sign_in_button)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            //.requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -37,10 +38,6 @@ class LoginActivity : AppCompatActivity() {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
-
-
-
-
 
     }
 
