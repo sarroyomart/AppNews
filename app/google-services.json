@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "595419854935",
+    "firebase_url": "https://vernal-maker-306511-default-rtdb.firebaseio.com",
+    "project_id": "vernal-maker-306511",
+    "storage_bucket": "vernal-maker-306511.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595419854935:android:edb333693b1ed468b54b12",
+        "android_client_info": {
+          "package_name": "com.example.appnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595419854935-51umbfip4i9ruqffceuhgkvenc483n0r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.appnews",
+            "certificate_hash": "81a9a625f6bcb0f190448ba910cf79ffc46066d8"
+          }
+        },
+        {
+          "client_id": "595419854935-qs35t20h414smvvs9a9hr7gh8es84vvt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXRc1GOMyABn85FxePHN1suqbZNw5NZEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595419854935-qs35t20h414smvvs9a9hr7gh8es84vvt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
