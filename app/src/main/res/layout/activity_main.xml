@@ -9,8 +9,10 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomnav"/>
+        android:layout_height="629dp"
+        android:layout_above="@id/bottomnav"
+        app:layout_constraintBottom_toTopOf="@+id/bottomnav"
+        tools:layout_editor_absoluteX="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomnav"
