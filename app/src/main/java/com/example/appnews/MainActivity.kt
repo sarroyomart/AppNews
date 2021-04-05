@@ -1,6 +1,5 @@
 package com.example.appnews
 
-import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,12 +7,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuView
 import androidx.fragment.app.Fragment
-import com.example.appnews.Database.DatabaseModel
+import androidx.lifecycle.lifecycleScope
+import com.example.appnews.Cypher.CypherPol
+import com.example.appnews.Database.DatabaseClass
+import com.example.appnews.Database.UserModel
 import com.example.appnews.MainPageFragments.FavsFragment
 import com.example.appnews.MainPageFragments.HomeFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.launch
 
 //Añadido los menus
 class MainActivity : AppCompatActivity(){
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity(){
     private lateinit var database: FirebaseDatabase
     private lateinit var referance: DatabaseReference
     lateinit var googleSignInClient: GoogleSignInClient
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,21 +92,30 @@ class MainActivity : AppCompatActivity(){
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        //sendData()
+
+        var model: UserModel = UserModel(personEmail, personId1, 0)
+
+        val cuc = CypherPol.encrypt(personId1)
+        Log.d("sinencryptao", personId1)
+        Log.d("encrypptao", cuc.toString())
+        Log.d("desencryptao", CypherPol.decrypt(cuc.toString()).toString())
 
 
+        //app.room.getUserDao().insertAllData(model)
 
-    }
-
-    private fun sendData(){
-        var name = personName
-        var email = personEmail
-        if(name.isNotEmpty()&&email.isNotEmpty()){
-            var model= DatabaseModel(name, email)
-            var id = referance.push().key
-            referance.child(personId1).setValue(model)
+        lifecycleScope.launch {
+            //DatabaseClass.getDatabase(applicationContext).getUserDao().insertAllData(model)
+            val x = DatabaseClass.getDatabase(applicationContext).getUserDao().getAll()
+            Log.d("INSERTAO", x.toString())
         }
+
+
+
+
+
+
     }
+
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)

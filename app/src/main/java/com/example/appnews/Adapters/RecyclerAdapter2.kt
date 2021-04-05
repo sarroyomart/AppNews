@@ -1,4 +1,4 @@
-package com.example.appnews.adapters
+package com.example.appnews.Adapters
 
 import android.content.Intent
 import android.net.Uri
@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.appnews.GlobalClass
-import com.example.appnews.GlobalClass.Companion.ready
 import com.example.appnews.GlobalClass.Companion.ready2
 import com.example.appnews.R
 import com.google.firebase.database.*
