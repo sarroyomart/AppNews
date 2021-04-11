@@ -12,7 +12,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.appnews.GlobalClass.Companion.personId
+import com.example.appnews.Cypher.CypherPol
+import com.example.appnews.GlobalClass
 import com.example.appnews.R
 import com.google.firebase.database.*
 
@@ -22,6 +23,7 @@ private lateinit var referance: DatabaseReference
 private lateinit var ref2: DatabaseReference
 private var favs = mutableListOf<Int>()
 private var valores = mutableListOf<String>()
+private lateinit var personId:String
 
 
 
@@ -91,20 +93,7 @@ class RecyclerAdapter(private var titles: List<String>,
 
             buttonShare.setOnClickListener { v: View ->
                 Log.d("array", favs.toString())
-                /*val position: Int = adapterPosition
-                if(favs[position] ==1){
-                    Log.d("BOCATA", "de choriso")
-                }
 
-
-
-
-                var ref1= referance.child(personId).push()
-
-                ref1.child("Title").setValue(titles[position])
-                ref1.child("Description").setValue(details[position])
-                ref1.child("URL").setValue(links[position])
-                ref1.child("Image").setValue(images[position])*/
             }
 
         }
@@ -115,6 +104,8 @@ class RecyclerAdapter(private var titles: List<String>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
         val v= LayoutInflater.from(parent.context).inflate(R.layout.item_layout,parent,false)
+        personId = CypherPol.decrypt(GlobalClass.key, GlobalClass.personId)
+
 
         return ViewHolder(v)
     }

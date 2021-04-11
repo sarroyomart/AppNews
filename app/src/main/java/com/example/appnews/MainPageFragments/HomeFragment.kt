@@ -1,5 +1,6 @@
 package com.example.appnews.MainPageFragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appnews.AuxNews.APIRequest
 import com.example.appnews.R
 import com.example.appnews.Adapters.RecyclerAdapter
+import com.example.appnews.GlobalClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,6 +42,7 @@ class HomeFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
 
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
         rv_recyclerView=view.findViewById(R.id.rv_recyclerView)
@@ -80,7 +83,8 @@ class HomeFragment : Fragment(){
 
         GlobalScope.launch(Dispatchers.IO) {
             try{
-                val response = api.getNews()
+
+                val response = api.getNews(GlobalClass.url)
                 for(article in response.news){
                     Log.i("HomeFragment", "Result=$article")
                     addToList(article.title, article.description, article.image, article.url)
@@ -91,7 +95,9 @@ class HomeFragment : Fragment(){
                     progressBar.visibility=View.GONE
                 }
             }catch(e: Exception){
+
                 Log.e("HomeFragment", e.toString())
+
 
                 withContext(Dispatchers.Main){
                     attemptRequestAgain()

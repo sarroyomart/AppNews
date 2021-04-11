@@ -108,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
 
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
+                    GlobalClass.url = this.getString(R.string.URL)
                     Log.d("SignInActivity", "signInWithCredential:success")
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)

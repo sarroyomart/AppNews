@@ -9,7 +9,13 @@ data class UserModel (
         @PrimaryKey val email: String,
 
         @ColumnInfo(name = "userId")
-        val userId: String,
+        val userId: String?,
         @ColumnInfo(name = "fingerprint")
-        val fingerprint:Int
+        val fingerprint:Int,
+        @ColumnInfo(name= "country")
+        val country:String,
+        @ColumnInfo(name= "language")
+        val language:String,
+        @ColumnInfo(name = "IV")
+        val iv:ByteArray
 )

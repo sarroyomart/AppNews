@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.appnews.Cypher.CypherPol
 import com.example.appnews.GlobalClass
 import com.example.appnews.GlobalClass.Companion.ready2
 import com.example.appnews.R
@@ -23,6 +24,8 @@ private lateinit var referance: DatabaseReference
 private var valores = mutableListOf<String>()
 private lateinit var  recyclerView: RecyclerView
 
+private lateinit var personId:String
+
 
 
 class RecyclerAdapter2 (private var titles: MutableList<String>,
@@ -30,6 +33,9 @@ class RecyclerAdapter2 (private var titles: MutableList<String>,
                         private var images: MutableList<String>,
                         private var links: MutableList<String>
 ) : RecyclerView.Adapter<RecyclerAdapter2.ViewHolder>(){
+
+    //DECRYPT PERSON ID
+    
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val itemTitle: TextView = itemView.findViewById(R.id.tv_title)
@@ -53,7 +59,7 @@ class RecyclerAdapter2 (private var titles: MutableList<String>,
             }
 
             itemHeart.setOnClickListener{v:View->
-                referance.child(GlobalClass.personId +"/"+valores[adapterPosition]).removeValue()
+                referance.child(personId +"/"+valores[adapterPosition]).removeValue()
                 /*titles.removeAt(adapterPosition)
                 images.removeAt(adapterPosition)
                 links.removeAt(adapterPosition)
@@ -77,6 +83,8 @@ class RecyclerAdapter2 (private var titles: MutableList<String>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter2.ViewHolder {
         val v= LayoutInflater.from(parent.context).inflate(R.layout.item_layout,parent,false)
+        personId = CypherPol.decrypt(GlobalClass.key, GlobalClass.personId)
+        Log.d("personilla", personId)
         database = FirebaseDatabase.getInstance()
         referance = database.getReference()
         recyclerView = parent.findViewById(R.id.rv_recyclerViewFav)
@@ -93,7 +101,7 @@ class RecyclerAdapter2 (private var titles: MutableList<String>,
     override fun onBindViewHolder(holder: RecyclerAdapter2.ViewHolder, position: Int) {
 
         valores.add("")
-        referance.child(GlobalClass.personId).addValueEventListener(object: ValueEventListener {
+        referance.child(personId).addValueEventListener(object: ValueEventListener {
 
 
             override fun onDataChange(snapshot: DataSnapshot) {

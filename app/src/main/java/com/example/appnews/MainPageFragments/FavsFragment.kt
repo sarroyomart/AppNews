@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appnews.GlobalClass.Companion.personId
 import com.example.appnews.GlobalClass.Companion.ready
 import com.example.appnews.R
 import com.example.appnews.Adapters.RecyclerAdapter2
+import com.example.appnews.Cypher.CypherPol
+import com.example.appnews.Database.DatabaseClass
+import com.example.appnews.GlobalClass
 import com.google.firebase.database.*
 
 class FavsFragment: Fragment() {
@@ -31,6 +33,9 @@ class FavsFragment: Fragment() {
         fun newInstance(): FavsFragment = FavsFragment()
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        
+        var personId = CypherPol.decrypt(GlobalClass.key, GlobalClass.personId)
         val view: View = inflater.inflate(R.layout.fragment_favs, container, false)
         database = FirebaseDatabase.getInstance()
         referance = database.getReference()

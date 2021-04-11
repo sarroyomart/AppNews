@@ -3,6 +3,9 @@ package com.example.appnews
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.appnews.AdvancedFilter.FilterActivity
 import com.example.appnews.Cypher.CypherPol
 import com.example.appnews.Database.DatabaseClass
 import com.example.appnews.Database.UserModel
@@ -24,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
+import javax.crypto.KeyGenerator
 
 //Añadido los menus
 class MainActivity : AppCompatActivity(){
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity(){
 
         firebaseAuth = FirebaseAuth.getInstance()
         val bottomNav: BottomNavigationView = findViewById(R.id.bottomnav)
-        openFragment(HomeFragment.newInstance())
+
 
         bottomNav.setOnNavigationItemSelectedListener { menuItem->
             when(menuItem.itemId){
@@ -79,12 +84,15 @@ class MainActivity : AppCompatActivity(){
             personEmail = acct.email.toString()
             personId1 = acct.id.toString()
             val personPhoto: Uri? = acct.photoUrl
-            GlobalClass.personId=personId1
+
+            GlobalClass.email = personEmail
+
 
             Log.d("Info", personName + personEmail)
 
 
         }
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("595419854935-qs35t20h414smvvs9a9hr7gh8es84vvt.apps.googleusercontent.com")
                 .requestEmail()
@@ -92,26 +100,45 @@ class MainActivity : AppCompatActivity(){
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-
-        var model: UserModel = UserModel(personEmail, personId1, 0)
-
-        val cuc = CypherPol.encrypt(personId1)
-        Log.d("sinencryptao", personId1)
-        Log.d("encrypptao", cuc.toString())
-        Log.d("desencryptao", CypherPol.decrypt(cuc.toString()).toString())
+        var key = CypherPol.generateKey()
+        Log.d("tamaniollave1", key.size.toString())
+        val encryptedId = CypherPol.encrypt(key, personId1)
 
 
-        //app.room.getUserDao().insertAllData(model)
 
         lifecycleScope.launch {
-            //DatabaseClass.getDatabase(applicationContext).getUserDao().insertAllData(model)
+            //DatabaseClass.getDatabase(applicationContext).getUserDao().nukeTable()
+
+            val usr = DatabaseClass.getDatabase(applicationContext).getUserDao().getUserId(personEmail)
+            if (usr.size==0){
+
+                var model: UserModel = UserModel(personEmail, encryptedId, 0, "GLOBAL", "es", key)
+                DatabaseClass.getDatabase(applicationContext).getUserDao().insertAllData(model)
+            }
+
+            GlobalClass.personId=DatabaseClass.getDatabase(applicationContext).getUserDao().getId(GlobalClass.email)
+            GlobalClass.key=DatabaseClass.getDatabase(applicationContext).getUserDao().getKey(GlobalClass.email)
+
+            Log.d("tamaniollave2", GlobalClass.key.size.toString())
             val x = DatabaseClass.getDatabase(applicationContext).getUserDao().getAll()
-            Log.d("INSERTAO", x.toString())
+
+            val country = DatabaseClass.getDatabase(applicationContext).getUserDao().getCountry(GlobalClass.email)
+            val language = DatabaseClass.getDatabase(applicationContext).getUserDao().getLanguage(GlobalClass.email)
+
+            if (!country.equals("GLOBAL")&&!GlobalClass.url.contains("country")){
+                    GlobalClass.url= GlobalClass.url+"&country="+country
+            }
+            if(country.equals("GLOBAL")&&GlobalClass.url.contains("country")){
+                GlobalClass.url = GlobalClass.url.replace("&country="+GlobalClass.prevCountry, "")
+            }
+
+            GlobalClass.url = GlobalClass.url.replace("language="+GlobalClass.prevLanguage, "language="+language)
+            Log.d("linguini", GlobalClass.url)
+            openFragment(HomeFragment.newInstance())
+
+            //DatabaseClass.getDatabase(applicationContext).getUserDao().nukeTable()
+            //Log.d("INSERTAO", x.toString())
         }
-
-
-
-
 
 
     }
@@ -124,11 +151,13 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater:MenuInflater = getMenuInflater()
         inflater.inflate(R.menu.mainpagemenu, menu)
 
         menu?.findItem(R.id.item1)?.setTitle("Hi " + personName)
+
+
 
 
         return true
@@ -136,8 +165,9 @@ class MainActivity : AppCompatActivity(){
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.itemsearch->startActivity(Intent(this, FilterActivity::class.java))
             R.id.item1 -> Toast.makeText(this, "Item 1 selected", Toast.LENGTH_LONG).show()
-            R.id.item2 -> Toast.makeText(this, "Item 2 selected", Toast.LENGTH_LONG).show()
+            R.id.itemSettings -> startActivity(Intent(this, SettingsActivity::class.java))
             R.id.item3 -> logOut()
         }
         return super.onOptionsItemSelected(item)

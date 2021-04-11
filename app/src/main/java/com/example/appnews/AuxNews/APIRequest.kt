@@ -1,9 +1,20 @@
 package com.example.appnews.AuxNews
 
+import android.content.res.Resources
 import com.example.appnews.AuxNews.api.NewsApiJSON
+import com.example.appnews.R
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Url
 
 interface APIRequest {
-    @GET("/v1/latest-news?country=ES&language=es&apiKey=ogNGuP76wuSgH33lpP-3peLhFK4OMsCU0anyd7QqnuXqG6ET")
-    suspend fun getNews(): NewsApiJSON
+
+    //@GET("{link}")
+    @GET
+    suspend fun getNews(@Url url:String): NewsApiJSON
+
+    /*@GET(String.get(link)
+    suspend fun getNews(): NewsApiJSON*/
+
+
 }
