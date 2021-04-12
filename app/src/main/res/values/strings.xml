@@ -13,11 +13,6 @@
     <string name="user">NAME</string>
 
     <!--
-    API
-    -->
-    <string name="URL">/v1/latest-news?language=en&amp;apiKey=ogNGuP76wuSgH33lpP-3peLhFK4OMsCU0anyd7QqnuXqG6ET</string>
-
-    <!--
     FILTER ACTIVITY
     -->
     <string name="business">BUSINESS</string>

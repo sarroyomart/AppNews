@@ -30,17 +30,13 @@ class LoginActivity : AppCompatActivity() {
     lateinit var googleSignInClient: GoogleSignInClient
     lateinit var mAuth: FirebaseAuth
 
-
-
+    init {
+        System.loadLibrary("api-keys")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        //mAuth= FirebaseAuth.getInstance()
-
-        //val user = mAuth.currentUser
-
 
 
         signin = findViewById<SignInButton>(R.id.sign_in_button)
@@ -59,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        //firebaseAuth= FirebaseAuth.getInstance()
 
     }
 
@@ -68,12 +63,10 @@ class LoginActivity : AppCompatActivity() {
         Log.w("OnActivityResult", requestCode.toString())
 
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             val exception = task.exception
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+
             if (exception != null) {
                 Log.w("SignInActivity", exception.message.toString())
                 Log.w("SignInActivity", exception)
@@ -86,17 +79,11 @@ class LoginActivity : AppCompatActivity() {
                     if (account != null) {
                         firebaseAuthWithGoogle(account.idToken!!)
                     }
-                    //val intent = Intent(this, MainActivity::class.java)
-                    //startActivity(intent)
 
-                    // Signed in successfully, show authenticated UI.
                 } catch (e: ApiException) {
-                    // The ApiException status code indicates the detailed failure reason.
-                    // Please refer to the GoogleSignInStatusCodes class reference for more information.
                     Log.w("SignInActivity", exception.toString())
                 }
             }
-            //handleSignInResult(task)
         }
     }
 
@@ -107,15 +94,16 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
 
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    GlobalClass.url = this.getString(R.string.URL)
+
+                    GlobalClass.url = getKeys()
+
                     Log.d("SignInActivity", "signInWithCredential:success")
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("SignInActivity", "signInWithCredential:failure", task.exception)
                 }
             }
     }
+    external fun getKeys():String
 }

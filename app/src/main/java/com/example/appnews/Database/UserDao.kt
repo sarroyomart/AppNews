@@ -13,6 +13,9 @@ interface UserDao {
     @Query("SELECT fingerprint FROM UserModel WHERE email = :eid")
     suspend fun getFingerprintByEmail(eid: String): Int
 
+    @Query("UPDATE UserModel SET fingerprint=:cid WHERE email=:eid")
+    suspend fun updateFingerprint(cid:Int, eid: String)
+
     @Query("SELECT * FROM UserModel")
     suspend fun getAll():List<UserModel>
 

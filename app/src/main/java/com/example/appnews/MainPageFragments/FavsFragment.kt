@@ -1,11 +1,18 @@
 package com.example.appnews.MainPageFragments
 
+import android.app.KeyguardManager
+import android.content.DialogInterface
+import android.hardware.biometrics.BiometricPrompt
+import android.os.Build
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appnews.GlobalClass.Companion.ready
@@ -15,6 +22,9 @@ import com.example.appnews.Cypher.CypherPol
 import com.example.appnews.Database.DatabaseClass
 import com.example.appnews.GlobalClass
 import com.google.firebase.database.*
+import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class FavsFragment: Fragment() {
     private lateinit var database: FirebaseDatabase
@@ -26,6 +36,7 @@ class FavsFragment: Fragment() {
     private val urlList = mutableListOf<String>()
 
 
+
     lateinit var rv_recyclerView: RecyclerView
 
 
@@ -34,7 +45,6 @@ class FavsFragment: Fragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        
         var personId = CypherPol.decrypt(GlobalClass.key, GlobalClass.personId)
         val view: View = inflater.inflate(R.layout.fragment_favs, container, false)
         database = FirebaseDatabase.getInstance()
@@ -59,7 +69,14 @@ class FavsFragment: Fragment() {
                 if (ready == false){
                     Log.d("achiou", "bocatita")
                     Log.d("titles", titleList.toString())
-                    setUpRecyclerView()
+                    lifecycleScope.launch {
+                        if(DatabaseClass.getDatabase(activity!!.applicationContext).getUserDao().getFingerprintByEmail(GlobalClass.email)==1){
+                            setUpRecyclerView()
+                        }
+                    }
+
+
+
                 }
 
 

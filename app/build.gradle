@@ -34,6 +34,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild {
+        ndkBuild {
+            path file('src/main/jni/Android.mk')
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -83,6 +88,9 @@ dependencies {
 
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    //Biometric
+    implementation "androidx.biometric:biometric:1.0.1"
 
 
 

@@ -1,8 +1,12 @@
 package com.example.appnews
 
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.hardware.biometrics.BiometricPrompt
 import android.net.Uri
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
@@ -28,9 +32,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import javax.crypto.KeyGenerator
 
-//Añadido los menus
 class MainActivity : AppCompatActivity(){
 
     var personName =""
@@ -73,22 +78,18 @@ class MainActivity : AppCompatActivity(){
 
 
         database = FirebaseDatabase.getInstance()
-        Log.d("InfoDB1", database.toString())
+
         referance =database.getReference()
-        Log.d("InfoDB2", referance.toString())
+
         val acct = GoogleSignIn.getLastSignedInAccount(this)
         if (acct != null) {
             personName = acct.displayName.toString()
-            val personGivenName = acct.givenName
-            val personFamilyName = acct.familyName
             personEmail = acct.email.toString()
             personId1 = acct.id.toString()
-            val personPhoto: Uri? = acct.photoUrl
 
             GlobalClass.email = personEmail
 
 
-            Log.d("Info", personName + personEmail)
 
 
         }
@@ -101,9 +102,15 @@ class MainActivity : AppCompatActivity(){
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         var key = CypherPol.generateKey()
-        Log.d("tamaniollave1", key.size.toString())
         val encryptedId = CypherPol.encrypt(key, personId1)
 
+        var executor: Executor = Executors.newSingleThreadExecutor()
+        var biometricPrompt: BiometricPrompt = BiometricPrompt.Builder(applicationContext)
+            .setTitle("Fingerprint Authentication")
+            .setNegativeButton("Cancel",executor, DialogInterface.OnClickListener(){ dialog, which ->
+
+            })
+            .build()
 
 
         lifecycleScope.launch {
@@ -119,9 +126,6 @@ class MainActivity : AppCompatActivity(){
             GlobalClass.personId=DatabaseClass.getDatabase(applicationContext).getUserDao().getId(GlobalClass.email)
             GlobalClass.key=DatabaseClass.getDatabase(applicationContext).getUserDao().getKey(GlobalClass.email)
 
-            Log.d("tamaniollave2", GlobalClass.key.size.toString())
-            val x = DatabaseClass.getDatabase(applicationContext).getUserDao().getAll()
-
             val country = DatabaseClass.getDatabase(applicationContext).getUserDao().getCountry(GlobalClass.email)
             val language = DatabaseClass.getDatabase(applicationContext).getUserDao().getLanguage(GlobalClass.email)
 
@@ -133,11 +137,22 @@ class MainActivity : AppCompatActivity(){
             }
 
             GlobalClass.url = GlobalClass.url.replace("language="+GlobalClass.prevLanguage, "language="+language)
-            Log.d("linguini", GlobalClass.url)
+
+            if (DatabaseClass.getDatabase(applicationContext).getUserDao().getFingerprintByEmail(GlobalClass.email)==0){
+                biometricPrompt.authenticate(CancellationSignal(),executor, object: BiometricPrompt.AuthenticationCallback(){
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
+                        super.onAuthenticationSucceeded(result)
+                        lifecycleScope.launch {
+                            DatabaseClass.getDatabase(applicationContext).getUserDao().updateFingerprint(1, GlobalClass.email)
+                        }
+
+
+
+                    }
+                })
+            }
             openFragment(HomeFragment.newInstance())
 
-            //DatabaseClass.getDatabase(applicationContext).getUserDao().nukeTable()
-            //Log.d("INSERTAO", x.toString())
         }
 
 
@@ -174,6 +189,10 @@ class MainActivity : AppCompatActivity(){
     }
     fun logOut(){
         startActivity(Intent(this, LoginActivity::class.java))
+        lifecycleScope.launch {
+            DatabaseClass.getDatabase(applicationContext).getUserDao().updateFingerprint(0, GlobalClass.email)
+        }
+
         googleSignInClient.signOut()
         firebaseAuth.signOut()
     }
