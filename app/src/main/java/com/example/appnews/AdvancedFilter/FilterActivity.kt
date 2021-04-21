@@ -102,7 +102,6 @@ class FilterActivity: AppCompatActivity() {
         search.setOnClickListener{v: View ->
 
             GlobalClass.url = GlobalClass.url+"&keywords="+searchText.text
-            Log.d("SERCHOLINO", GlobalClass.url)
 
             changeActivity()
         }

@@ -30,10 +30,6 @@ class SettingsActivity: AppCompatActivity() {
         buttonReturn = findViewById(R.id.buttonReturn)
 
 
-
-
-
-        //COUNTRY
         val countries = arrayOf("GLOBAL", "ES", "EN", "FR", "PT")
 
         var adapterCountries: ArrayAdapter<String> = ArrayAdapter(this, R.layout.dropdown_item, countries)
@@ -41,7 +37,6 @@ class SettingsActivity: AppCompatActivity() {
         dropDownCountries.adapter=adapterCountries
 
 
-        //LANGUAGE
         val languages = arrayOf("es", "en", "fr", "pt")
 
         var adapterLanguages: ArrayAdapter<String> = ArrayAdapter(this, R.layout.dropdown_item, languages)
@@ -55,11 +50,6 @@ class SettingsActivity: AppCompatActivity() {
         buttonAccept.setOnClickListener { v: View ->
             lifecycleScope.launch {
 
-                /*if (GlobalClass.url.contains("language")){
-                    val country = DatabaseClass.getDatabase(applicationContext).getUserDao().getCountry(GlobalClass.email)
-                    val language = DatabaseClass.getDatabase(applicationContext).getUserDao().getLanguage(GlobalClass.email)
-
-                }*/
                 val country = DatabaseClass.getDatabase(applicationContext).getUserDao().getCountry(GlobalClass.email)
                 val language = DatabaseClass.getDatabase(applicationContext).getUserDao().getLanguage(GlobalClass.email)
 

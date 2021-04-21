@@ -21,7 +21,6 @@ abstract class DatabaseClass: RoomDatabase() {
                     "appnews"
                 ).fallbackToDestructiveMigration().build()
                 instance = instancex
-                // return instance
                 instancex
             }
 

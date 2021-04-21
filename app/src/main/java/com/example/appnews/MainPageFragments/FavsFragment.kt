@@ -52,6 +52,13 @@ class FavsFragment: Fragment() {
         var ref = referance.child(personId)
         rv_recyclerView=view.findViewById(R.id.rv_recyclerViewFav)
         ready = false
+        var executor: Executor = Executors.newSingleThreadExecutor()
+        var biometricPrompt: BiometricPrompt = BiometricPrompt.Builder(activity!!.applicationContext)
+                .setTitle("Fingerprint Authentication")
+                .setNegativeButton("Cancel",executor, DialogInterface.OnClickListener(){ dialog, which ->
+
+                })
+                .build()
 
 
 
@@ -67,27 +74,32 @@ class FavsFragment: Fragment() {
 
                 }
                 if (ready == false){
-                    Log.d("achiou", "bocatita")
-                    Log.d("titles", titleList.toString())
                     lifecycleScope.launch {
                         if(DatabaseClass.getDatabase(activity!!.applicationContext).getUserDao().getFingerprintByEmail(GlobalClass.email)==1){
                             setUpRecyclerView()
                         }
+                        if (DatabaseClass.getDatabase(activity!!.applicationContext).getUserDao().getFingerprintByEmail(GlobalClass.email)==0){
+                            biometricPrompt.authenticate(CancellationSignal(),executor, object: BiometricPrompt.AuthenticationCallback(){
+                                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
+                                    super.onAuthenticationSucceeded(result)
+                                    lifecycleScope.launch {
+                                        DatabaseClass.getDatabase(activity!!.applicationContext).getUserDao().updateFingerprint(1, GlobalClass.email)
+                                        setUpRecyclerView()
+                                    }
+
+
+
+                                }
+                            })
+                        }
                     }
-
-
 
                 }
 
-
-
-
             }
 
-
-
             override fun onCancelled(error: DatabaseError) {
-                Log.d("Cancelled", "cancelado")
+                Log.d("Cancelled", "Cancelled")
             }
 
         })
@@ -107,7 +119,7 @@ class FavsFragment: Fragment() {
     }
 
     private fun setUpRecyclerView(){
-        rv_recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)//CREO QUE ES ASI, ANTES ESTABA ApplicationContext
+        rv_recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
         rv_recyclerView.adapter = RecyclerAdapter2(titleList, descriptionList, imageList, urlList)
         ready = true
     }

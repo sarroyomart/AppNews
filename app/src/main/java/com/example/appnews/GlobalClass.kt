@@ -10,7 +10,6 @@ class GlobalClass: Application() {
         var ready = false
         var ready2 = false
         var email=""
-
         var url = ""
         var prevCountry=""
         var prevLanguage="en"

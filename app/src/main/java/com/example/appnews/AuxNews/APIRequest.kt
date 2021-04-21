@@ -9,12 +9,6 @@ import retrofit2.http.Url
 
 interface APIRequest {
 
-    //@GET("{link}")
     @GET
     suspend fun getNews(@Url url:String): NewsApiJSON
-
-    /*@GET(String.get(link)
-    suspend fun getNews(): NewsApiJSON*/
-
-
 }

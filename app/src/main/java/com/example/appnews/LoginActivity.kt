@@ -97,7 +97,6 @@ class LoginActivity : AppCompatActivity() {
 
                     GlobalClass.url = getKeys()
 
-                    Log.d("SignInActivity", "signInWithCredential:success")
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {

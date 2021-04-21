@@ -53,15 +53,12 @@ class RecyclerAdapter(private var titles: List<String>,
 
             }
             itemHeart.setOnClickListener{v:View->
-                Log.d("POSICION", adapterPosition.toString())
-                Log.d("valor", favs[adapterPosition].toString())
-
                 if(favs[adapterPosition] == 0){
                     favs[adapterPosition]=1
                     itemHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24_2)
-                    Log.d("-------------------------111111111111111", "String")
+
                     var pushkey = referance.child(personId).push().key.toString()
-                    Log.d("PUSHKEY", pushkey)
+
                     var ref1= referance.child(personId+"/"+pushkey)
 
                     ref1.child("Title").setValue(titles[adapterPosition])
@@ -75,13 +72,10 @@ class RecyclerAdapter(private var titles: List<String>,
                 }
 
                 else{
-                    Log.d("else", "bocata de shorizo")
+
                     favs[adapterPosition]=0
                     itemHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
 
-                    //itemHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
-                    Log.d("-------------------------2222222222222", "String")
-                    //getData(adapterPosition)
                     referance.child(personId+"/"+valores[adapterPosition]).removeValue()
 
 
@@ -92,7 +86,14 @@ class RecyclerAdapter(private var titles: List<String>,
             }
 
             buttonShare.setOnClickListener { v: View ->
-                Log.d("array", favs.toString())
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, links[adapterPosition])
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(v.context, shareIntent, null)
 
             }
 
@@ -123,18 +124,12 @@ class RecyclerAdapter(private var titles: List<String>,
 
         ref2 = referance.child(personId)
         var found = 0
-        var marca = 0
         ref2.addValueEventListener(object: ValueEventListener {
 
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(dsp: DataSnapshot in snapshot.getChildren()){
-                    //addToList(dsp.child("Title").getValue().toString(), dsp.child("Description").getValue().toString(), dsp.child("Image").getValue().toString(), dsp.child("URL").getValue().toString())
-                    //Log.d(details[position], "desc")
                     if(dsp.child("Title").getValue().toString().equals(titles[position]) && dsp.child("Description").getValue().toString().equals(details[position])){
-                        //holder.itemHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24_2)
-                        //Log.d("-------------------------33333333333333", "String")
-
                         favs[position] = 1
                         valores[position]=dsp.key.toString()
                         found = 1
@@ -147,8 +142,6 @@ class RecyclerAdapter(private var titles: List<String>,
 
 
                 for(dsp: DataSnapshot in snapshot.getChildren()){
-                    //addToList(dsp.child("Title").getValue().toString(), dsp.child("Description").getValue().toString(), dsp.child("Image").getValue().toString(), dsp.child("URL").getValue().toString())
-                    //Log.d(details[position], "desc")
                     if(favs[position] == 0){
                         holder.itemHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
 
@@ -164,7 +157,7 @@ class RecyclerAdapter(private var titles: List<String>,
 
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("Cancelled", "cancelado")
+                Log.d("Cancelled", "Cancelled")
             }
 
         })
@@ -177,7 +170,5 @@ class RecyclerAdapter(private var titles: List<String>,
             .load(images[position])
             .into(holder.itemPicture)
 
-
-        Log.d("RA", "llega")
     }
 }

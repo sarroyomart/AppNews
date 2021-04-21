@@ -96,9 +96,6 @@ class HomeFragment : Fragment(){
                 }
             }catch(e: Exception){
 
-                Log.e("HomeFragment", e.toString())
-
-
                 withContext(Dispatchers.Main){
                     attemptRequestAgain()
                 }

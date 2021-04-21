@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(){
     var personName =""
     var personEmail=""
     var personId1=""
-    var la = LoginActivity
     lateinit var firebaseAuth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var referance: DatabaseReference
@@ -76,7 +75,6 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
-
         database = FirebaseDatabase.getInstance()
 
         referance =database.getReference()
@@ -88,9 +86,6 @@ class MainActivity : AppCompatActivity(){
             personId1 = acct.id.toString()
 
             GlobalClass.email = personEmail
-
-
-
 
         }
 
@@ -104,13 +99,8 @@ class MainActivity : AppCompatActivity(){
         var key = CypherPol.generateKey()
         val encryptedId = CypherPol.encrypt(key, personId1)
 
-        var executor: Executor = Executors.newSingleThreadExecutor()
-        var biometricPrompt: BiometricPrompt = BiometricPrompt.Builder(applicationContext)
-            .setTitle("Fingerprint Authentication")
-            .setNegativeButton("Cancel",executor, DialogInterface.OnClickListener(){ dialog, which ->
 
-            })
-            .build()
+
 
 
         lifecycleScope.launch {
@@ -118,7 +108,6 @@ class MainActivity : AppCompatActivity(){
 
             val usr = DatabaseClass.getDatabase(applicationContext).getUserDao().getUserId(personEmail)
             if (usr.size==0){
-
                 var model: UserModel = UserModel(personEmail, encryptedId, 0, "GLOBAL", "es", key)
                 DatabaseClass.getDatabase(applicationContext).getUserDao().insertAllData(model)
             }
@@ -138,19 +127,7 @@ class MainActivity : AppCompatActivity(){
 
             GlobalClass.url = GlobalClass.url.replace("language="+GlobalClass.prevLanguage, "language="+language)
 
-            if (DatabaseClass.getDatabase(applicationContext).getUserDao().getFingerprintByEmail(GlobalClass.email)==0){
-                biometricPrompt.authenticate(CancellationSignal(),executor, object: BiometricPrompt.AuthenticationCallback(){
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                        super.onAuthenticationSucceeded(result)
-                        lifecycleScope.launch {
-                            DatabaseClass.getDatabase(applicationContext).getUserDao().updateFingerprint(1, GlobalClass.email)
-                        }
 
-
-
-                    }
-                })
-            }
             openFragment(HomeFragment.newInstance())
 
         }
