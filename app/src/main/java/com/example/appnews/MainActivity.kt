@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
 
+
+
         firebaseAuth = FirebaseAuth.getInstance()
         val bottomNav: BottomNavigationView = findViewById(R.id.bottomnav)
 
@@ -118,14 +120,12 @@ class MainActivity : AppCompatActivity(){
             val country = DatabaseClass.getDatabase(applicationContext).getUserDao().getCountry(GlobalClass.email)
             val language = DatabaseClass.getDatabase(applicationContext).getUserDao().getLanguage(GlobalClass.email)
 
-            if (!country.equals("GLOBAL")&&!GlobalClass.url.contains("country")){
-                    GlobalClass.url= GlobalClass.url+"&country="+country
-            }
-            if(country.equals("GLOBAL")&&GlobalClass.url.contains("country")){
-                GlobalClass.url = GlobalClass.url.replace("&country="+GlobalClass.prevCountry, "")
+            if (country != "GLOBAL" &&!GlobalClass.url.contains("country")){
+                    GlobalClass.url= GlobalClass.url.replace("&apiKey", "&country=$country&apiKey")
             }
 
-            GlobalClass.url = GlobalClass.url.replace("language="+GlobalClass.prevLanguage, "language="+language)
+            GlobalClass.url = GlobalClass.url.replace("language=en", "language="+language)
+            Log.d("urllink", GlobalClass.url)
 
 
             openFragment(HomeFragment.newInstance())

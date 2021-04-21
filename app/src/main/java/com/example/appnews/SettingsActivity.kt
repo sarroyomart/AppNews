@@ -59,6 +59,15 @@ class SettingsActivity: AppCompatActivity() {
                 DatabaseClass.getDatabase(applicationContext).getUserDao().updateCountry(dropDownCountries.selectedItem.toString(), GlobalClass.email)
 
                 DatabaseClass.getDatabase(applicationContext).getUserDao().updateLanguage(dropDownLanguages.selectedItem.toString(), GlobalClass.email)
+
+                if (dropDownCountries.selectedItem.toString() != "GLOBAL" &&!GlobalClass.url.contains("country")){
+                    GlobalClass.url= GlobalClass.url.replace("&apiKey", "&country="+dropDownCountries.selectedItem.toString()+"&apiKey")
+                }
+                if(dropDownCountries.selectedItem.toString() == "GLOBAL" &&GlobalClass.url.contains("country")){
+                    GlobalClass.url = GlobalClass.url.replace("&country="+country, "")
+                }
+
+                GlobalClass.url = GlobalClass.url.replace("language="+language, "language="+dropDownLanguages.selectedItem.toString())
             }
 
             startActivity(Intent(this, MainActivity::class.java))

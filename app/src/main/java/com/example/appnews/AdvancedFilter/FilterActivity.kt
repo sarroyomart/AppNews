@@ -26,6 +26,7 @@ class FilterActivity: AppCompatActivity() {
     lateinit var technology: Button
     lateinit var searchText: EditText
     lateinit var search: Button
+    lateinit var latest: Button
     lateinit var returnB: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +42,11 @@ class FilterActivity: AppCompatActivity() {
         sports = findViewById(R.id.sportsB)
         technology = findViewById(R.id.technologyB)
         searchText = findViewById(R.id.searchText)
+        latest = findViewById(R.id.latestB)
         search = findViewById(R.id.searchB)
         returnB = findViewById(R.id.returnB)
+
+        val prevUrl = GlobalClass.url
 
         if (GlobalClass.url.contains("category")){
             var aux = GlobalClass.url.split("&category")
@@ -53,6 +57,7 @@ class FilterActivity: AppCompatActivity() {
             var aux = GlobalClass.url.split("&keywords")
             GlobalClass.url= aux[0]
         }
+        GlobalClass.url = GlobalClass.url.replace("latest-news", "search")
 
         business.setOnClickListener{v: View ->
 
@@ -98,15 +103,20 @@ class FilterActivity: AppCompatActivity() {
 
             changeActivity()
         }
+        latest.setOnClickListener { v: View ->
+            GlobalClass.url = GlobalClass.url.replace("search", "latest-news")
+            changeActivity()
+        }
 
         search.setOnClickListener{v: View ->
 
             GlobalClass.url = GlobalClass.url+"&keywords="+searchText.text
+            Log.d("keywords", GlobalClass.url)
 
             changeActivity()
         }
         returnB.setOnClickListener{v: View ->
-
+            GlobalClass.url = prevUrl
             changeActivity()
         }
 
