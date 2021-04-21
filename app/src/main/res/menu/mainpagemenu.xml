@@ -4,17 +4,17 @@
 
     <item android:id="@+id/itemsearch"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="always"/>
     <item android:id="@+id/item1"
-        android:title="Name"
+        android:title="@string/name"
         app:showAsAction="never"/>
     <item android:id="@+id/itemSettings"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never"/>
     <item android:id="@+id/item3"
-        android:title="LogOut"
+        android:title="@string/logout"
         app:showAsAction="never"/>
 
 </menu>

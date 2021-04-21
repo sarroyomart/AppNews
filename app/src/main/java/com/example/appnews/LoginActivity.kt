@@ -104,5 +104,5 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
-    external fun getKeys():String
+    private external fun getKeys():String
 }

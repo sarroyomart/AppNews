@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity(){
         val inflater:MenuInflater = getMenuInflater()
         inflater.inflate(R.menu.mainpagemenu, menu)
 
-        menu?.findItem(R.id.item1)?.setTitle("Hi " + personName)
+        menu?.findItem(R.id.item1)?.title = "Hi $personName"
 
 
 

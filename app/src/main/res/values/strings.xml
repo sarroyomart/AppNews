@@ -13,6 +13,27 @@
     <string name="user">NAME</string>
 
     <!--
+    MENU
+    -->
+    <string name="search">Search</string>
+    <string name="name">Name</string>
+    <string name="settings">Settings</string>
+    <string name="logout">LogOut</string>
+
+    <!--
+    ITEM LAYOUT
+    -->
+    <string name="image">IMAGE</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+
+    <!--
+    BOTTOM_NAV
+    -->
+    <string name="home">Home</string>
+    <string name="favs">Favs</string>
+
+    <!--
     FILTER ACTIVITY
     -->
     <string name="business">BUSINESS</string>
@@ -24,6 +45,7 @@
     <string name="technology">TECHNOLOGY</string>
     <string name="all">ALL</string>
     <string name="returnB">RETURN</string>
+    <string name="keywords">KEYWORDS</string>
 
     <!--
     SETTINGS
