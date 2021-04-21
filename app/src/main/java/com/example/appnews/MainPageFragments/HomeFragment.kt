@@ -19,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.CertificatePinner
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
@@ -62,7 +64,7 @@ class HomeFragment : Fragment(){
     }
 
     private fun setUpRecyclerView(){
-        rv_recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)//CREO QUE ES ASI, ANTES ESTABA ApplicationContext
+        rv_recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
         rv_recyclerView.adapter = RecyclerAdapter(titlesList, descList, imagesList, linksList)
     }
 
@@ -75,9 +77,14 @@ class HomeFragment : Fragment(){
     private fun makeAPIRequest(){
         progressBar.visibility=View.VISIBLE
 
+        val certificatePinner = CertificatePinner.Builder().add("api.currentsapi.services", "sha256/WD3/UZLGTPHg1VlcSUpolhJ4aSYxC6LKKvHZFiCnvM4=").build()
+
+        val okHttpClient = OkHttpClient.Builder().certificatePinner(certificatePinner).build()
+
         val api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
             .create(APIRequest::class.java)
 

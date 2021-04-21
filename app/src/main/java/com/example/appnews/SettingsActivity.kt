@@ -57,10 +57,8 @@ class SettingsActivity: AppCompatActivity() {
                 GlobalClass.prevLanguage=language
 
                 DatabaseClass.getDatabase(applicationContext).getUserDao().updateCountry(dropDownCountries.selectedItem.toString(), GlobalClass.email)
-                Log.d("pais", dropDownCountries.selectedItem.toString())
 
                 DatabaseClass.getDatabase(applicationContext).getUserDao().updateLanguage(dropDownLanguages.selectedItem.toString(), GlobalClass.email)
-                Log.d("idioma", dropDownLanguages.selectedItem.toString())
             }
 
             startActivity(Intent(this, MainActivity::class.java))
